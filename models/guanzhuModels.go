@@ -5,7 +5,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-type Guanzhu struct {
+type Cms_Guanzhu struct {
 	Id          int
 	KnowledgeId int
 	Uid         int
@@ -14,12 +14,12 @@ type Guanzhu struct {
 }
 
 func GuanzhuInformation(uid interface{}) (dataList []interface{}, err error) {
-	var list []Guanzhu
-	var list2 []Knowledge //知识库一级
-	var list3 []Knowledge //知识库二级
+	var list []Cms_Guanzhu
+	var list2 []Cms_Knowledge //知识库一级
+	var list3 []Cms_Knowledge //知识库二级
 	o := orm.NewOrm()
-	qs1 := o.QueryTable(new(Guanzhu))
-	qs2 := o.QueryTable(new(Knowledge))
+	qs1 := o.QueryTable(new(Cms_Guanzhu))
+	qs2 := o.QueryTable(new(Cms_Knowledge))
 	//if _, err = qs.Filter("pid__exact", 0).All(&list); err == nil {            只查询一级目录
 	if _, err = qs1.Filter("uid__exact", uid).All(&list); err == nil { //查询全部
 		for _, v := range list {
@@ -40,7 +40,7 @@ func GuanzhuInformation(uid interface{}) (dataList []interface{}, err error) {
 }
 
 func AddGuanzhuInformation(userId interface{}, id, pid int) (isinsert int64) {
-	var data Guanzhu
+	var data Cms_Guanzhu
 	o := orm.NewOrm()
 	data.KnowledgeId = id
 	data.Pid = pid
@@ -60,17 +60,4 @@ func DeleteGuanzhuInfo(id int, uid interface{}) error {
 		fmt.Println("mysql row affected nums: ", num)
 	}
 	return err
-}
-
-//查询是否关注
-func IsGuanzhu(userId int, knowledgeId int) int {
-	var list []Guanzhu
-	o := orm.NewOrm()
-	qs := o.QueryTable("guanzhu")
-	qs.Filter("knowledge_id", knowledgeId).Filter("uid", userId).All(&list)
-	if len(list) > 0 {
-		return 1
-	}
-	return 0
-
 }

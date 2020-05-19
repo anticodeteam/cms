@@ -192,17 +192,17 @@
 <script src="/static/js/demo.js"></script>
 
 <script>
-        $(function () {
-          /*  $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": false,
-                "ordering": false,
-                "info": true,
-                "autoWidth": true,
-                "responsive": true,
-            });*/
-        });
+    //  $(function () {
+    //         $('#example2').DataTable({
+    //             "paging": true,
+    //             "lengthChange": true,
+    //             "searching": false,
+    //             "ordering": false,
+    //             "info": true,
+    //             "autoWidth": true,
+    //             "responsive": true,
+    //         });
+    // });
 </script>
 
 

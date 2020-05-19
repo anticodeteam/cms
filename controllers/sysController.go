@@ -46,7 +46,6 @@ func (c *SysController) AddTrees() {
 }
 
 func (c *SysController) GetTree() {
-
 	c.TplName = "page_left.tpl"
 }
 
@@ -68,7 +67,6 @@ func (c *SysController) Admin() {
 		c.Data["BigTitle"] = title1
 		c.Data["List"] = datalist
 		c.TplName = "user_knowledge.tpl"
-
 	case 2:
 		c.TplName = "user_guanzhu.tpl"
 	case 3:
@@ -103,3 +101,4 @@ func (c *SysController) DeleteTree() {
 		c.ServeJSON()
 	}
 }
+

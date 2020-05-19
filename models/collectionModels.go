@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type Collection struct {
+type Cms_Collection struct {
 	Id          int
 	KnowledgeId int
 	Uid         int
@@ -14,11 +14,11 @@ type Collection struct {
 }
 
 func CollectionInformation(uid interface{}) (dataList []interface{}, err error) {
-	var list []Collection
-	var list2 []Knowledge //知识库一级
+	var list []Cms_Collection
+	var list2 []Cms_Knowledge //知识库一级
 	o := orm.NewOrm()
-	qs1 := o.QueryTable(new(Collection))
-	qs2 := o.QueryTable(new(Knowledge))
+	qs1 := o.QueryTable(new(Cms_Collection))
+	qs2 := o.QueryTable(new(Cms_Knowledge))
 	if _, err = qs1.Filter("uid__exact", uid).All(&list); err == nil { //查询全部
 		for _, v := range list {
 			if err = qs2.Filter("id__exact", v.KnowledgeId).One(&list2); err == nil {
@@ -46,7 +46,7 @@ func DeleteCollections(id int, uid interface{}) error {
 func InsertCollection(id int, uid interface{}) error {
 	t := time.Now()
 	o := orm.NewOrm()
-	data := &Collection{}
+	data := &Cms_Collection{}
 	data.KnowledgeId = id
 	data.Uid = uid.(int)
 	data.Time = t.String()

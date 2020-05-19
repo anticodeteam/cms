@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"cms/models"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"strconv"
@@ -60,8 +61,7 @@ func (c *KnowController) GetMoreDirectory() {
 
 //拼写前端页面知识库画面
 func (c *KnowController) GetKnowledge() {
-	userId := c.GetSession("UserID")
-	datalist, err := models.Knowledges(userId)
+	datalist, err := models.Knowledges()
 	if err == nil {
 		c.Data["json"] = datalist
 	}
@@ -185,3 +185,26 @@ func (c *KnowController) GetArticleList() {
 	//logs.Info("dataList :", datalist)
 	c.ServeJSON()
 }
+
+//用户页面上传知识等待审批
+func (c *KnowController) UserSaveKonwledge() {
+	knowledgeName := c.GetString("Name")
+	uid := c.GetSession("UserID")
+	fmt.Println(knowledgeName,uid)
+	err := models.UserSaveKonwledgeAction(knowledgeName,uid)
+	logs.Info("err:", err)
+	if err != nil {
+		c.ServeJSON()
+	} else {
+		c.ServeJSON()
+	}
+}
+
+//
+func (c *KnowController) ChangeKnowledgeStatus() {
+	id,_ := c.GetInt("id")
+	status,_ := c.GetInt("status")
+	models.ChangeKnowledgeStatusAction(id,status)
+	c.TplName = "knowledge.tpl"
+}
+

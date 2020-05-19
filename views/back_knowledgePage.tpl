@@ -265,7 +265,17 @@
 {{/*                                        <td><input type="checkbox"></td>*/}}
                                         <th >{{.Id}}</th>
                                         <th>{{.Title}}</th>
-                                        <th><a href="#" onclick="edit({{.Id}},'{{.Title}}')">编辑</a><span> </span><a href="#" onclick="deletes({{.Id}})">删除</a></th>
+                                        <th>
+                                            <a href="#" onclick="edit({{.Id}},'{{.Title}}')">编辑</a>
+                                            <span> </span>
+                                            <a href="#" onclick="deletes({{.Id}})">删除</a>
+                                            <span> </span>
+                                            {{if eq .Status 0}}
+                                                <a href="#" onclick="changeKnowledgeStatus({{.Id}},1)">上架</a>
+                                            {{else}}
+                                                <a href="#" onclick="changeKnowledgeStatus({{.Id}},0)">下架</a>
+                                            {{end}}
+                                        </th>
                                     </tr>
                                 {{end}}
                             </table>
@@ -630,6 +640,27 @@
         {
             return false;
         }
+    }
+
+    //改变知识点审批状态
+    function changeKnowledgeStatus(id,status){
+        $.ajax({
+            type:"post",
+            url:"/changeKnowledgeStatus",
+            data:{id:id,status:status},
+            success:function(){
+                if(status){
+                    alert("上架成功!");
+                    window.location.reload();
+                }else{
+                    alert("下架成功!");
+                    window.location.reload();
+                }
+            },
+            error:function(){
+                alert("操作失败!")
+            }
+        })
     }
 
 

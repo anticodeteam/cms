@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"cms/models"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
@@ -21,7 +22,7 @@ func (c *MainController) Home() {
 }
 
 func (c *MainController) Login() {
-	var user = models.User{}
+	var user = models.Cms_User{}
 	var Pwd string
 	userId, _ := c.GetInt("Uid")
 	user.Uid = userId
@@ -40,5 +41,47 @@ func (c *MainController) Login() {
 		c.Data["Tip"] = "用户名不存在，请重新输入！"
 		return
 	}
+}
 
+func (c *MainController) RegistUser(){
+	fmt.Println("-------------------跳转到注册页面------------------")
+	c.TplName = "maincontroller/regist.tpl"
+}
+
+func (c *MainController) RegistDbInfo()(){
+	fmt.Println("-------------------开始注册DB信息------------------")
+	var user = models.Cms_User{}
+	//user struct
+	user.Uid,_ = c.GetInt("Uid")
+	user.Pwd = c.GetString("Pwd")
+	fmt.Println("user.Uid=",user.Uid," user.Pwd=",user.Pwd)
+	//c.SetSession("UserID",userId)
+	//跳转到model注册，注册成功跳转回登录页面，注册失败返回当前画面，重新注册
+	result := models.RegistDbInformation(user.Uid,user.Pwd)
+	if result == "" {
+		c.TplName = "maincontroller/login.tpl"
+	}else{
+		c.Data["result"] = result
+		c.TplName = "maincontroller/regist.tpl"
+	}
+}
+
+func (c *MainController) CancelRegist(){
+	c.TplName = "maincontroller/login.tpl"
+}
+
+func (c *MainController) LinktoAgent() {
+	dateList,err := models.GetAllUserInfo()
+	if err == nil {
+		c.Data["List"] = dateList
+		c.TplName = "maincontroller/AuthAssign.tpl"
+	}
+}
+
+func (c *MainController) AssignAgent() {
+	fmt.Println("---------------------AssignAgentStart-----------------------")
+	Uid,_ := c.GetInt("Uid")
+	fmt.Println("AssignAgent_Uid=",Uid)
+	models.UpdateAgentInfo(Uid)
+	c.TplName = "maincontroller/AuthAssign.tpl"
 }

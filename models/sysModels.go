@@ -6,16 +6,16 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Tree struct {
+type Cms_Tree struct {
 	Id    int `orm:"pk;auto"`
 	Title string
 	Pid   int
 }
 
 func QueryAllUserInfo() (dataList []interface{}, err error) {
-	var list []Tree
+	var list []Cms_Tree
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Tree))
+	qs := o.QueryTable(new(Cms_Tree))
 	//查询
 	//查询数据
 	if _, err = qs.Filter("Pid__exact", 0).All(&list); err == nil {
@@ -29,7 +29,7 @@ func QueryAllUserInfo() (dataList []interface{}, err error) {
 
 func InsertAdminDepart(title string) error {
 	o := orm.NewOrm()
-	category := &Tree{}
+	category := &Cms_Tree{}
 	category.Title = title
 	category.Pid = 0
 	_, err := o.Insert(category)
@@ -48,7 +48,7 @@ func InsertAdminDepart(title string) error {
 
 func InsertAdminDepart3(title string, pid int) error {
 	o := orm.NewOrm()
-	category := &Knowledge{}
+	category := &Cms_Knowledge{}
 	category.Title = title
 	category.Pid = pid
 	_, err := o.Insert(category)
@@ -80,9 +80,9 @@ func InsertAdminDepart3(title string, pid int) error {
 //}
 
 func SearchTree() (dataList []interface{}, err error) {
-	var list []Tree
+	var list []Cms_Tree
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Tree))
+	qs := o.QueryTable(new(Cms_Tree))
 	//查询
 	//查询数据
 	_, err = qs.All(&list)
@@ -97,8 +97,8 @@ func SearchTree() (dataList []interface{}, err error) {
 
 func SearchTemplate(id int) string {
 	o := orm.NewOrm()
-	t1 := new(Tree) //一级目录集合
-	t2 := new(Tree) //二级目录集合
+	t1 := new(Cms_Tree) //一级目录集合
+	t2 := new(Cms_Tree) //二级目录集合
 	o.Raw("select * from tree where  id = ?", id).QueryRow(&t2)
 	if t2.Pid == 0 {
 		return t2.Title //返回一级目录的标题及ID

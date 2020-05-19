@@ -38,6 +38,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
+                        <button class="btn btn-default" id="addButton">添加新的知识库选项</button>
                         <h3 class="card-title">{{.BigTitle}}</h3>
                         <div class="card-tools">
                             <div class="input-group input-group-sm" style="width: 150px;">
@@ -66,11 +67,41 @@
                     </div>
                     <!-- /.card-body -->
                 </div>
+
                 <!-- /.card -->
             </div>
         </div>
     </div>
     <!-- /.control-sidebar -->
+
+    <div class="container form-horizontal">
+        <div class="modal fade" id="modalTable">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">添加</h3>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-body-content">
+                            <div class="form-group must">
+                                <label class="col-sm-3 control-label">名称</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="knowledge" name="knowledge"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" onclick="userSaveKnowledge()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 <!-- ./wrapper -->
 
@@ -84,6 +115,15 @@
 <script src="/static/js/demo.js"></script>
 
 <script type="text/javascript">
+    $(document).ready(function() {
+        $("#addButton").click(function() {
+            $('#modalTable').modal({
+                show:true,
+                backdrop:'static'
+            });
+        })
+    });
+
     window.onload = function () {
         $.ajax({
             type:"post",
@@ -100,13 +140,7 @@
                         tablestr += "<td>" + data[i].Title + "</td>";
                         tablestr += "<td>" + data[i].Creater + "</td>";
                         tablestr += "<td>" + data[i].UpdateTime + "</td>";
-                        if(data[i].Isguanzhu == 0){
-                            tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='addGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>关注</a>" + "</td>";
-                        }else{
-                            tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='deleteGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>取消关注</a>" + "</td>";
-
-                        }
-
+                        tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='addGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>关注</a>" + "</td>";
                         tablestr += "</tr><tr><td colspan='4'><table style='width: 100%' id='div"+ data[i].Id +"'>";
                         for(var j = 0; j < len; j++){
                             if (data[i].Id == data[j].Pid){
@@ -161,38 +195,27 @@
             success:function(data){
                 if (data.flag == true){
                     console.log("id:"+id);
-                    // $("#moji"+id).text('取消关注');
-                    window.location.reload();
+                    $("#moji"+id).text('取消关注');
                 }
             }
         });
     }
 
-
-    function deleteGuanzhuInfo(id){
-        if(confirm("确定要取消关注吗？"))
-        {
+    function userSaveKnowledge() {
+        var konwledgeName = $("#knowledge").val();
+        if(konwledgeName){
             $.ajax({
                 type:"post",
-                url:"/deleteGuanzhu",
-                data: {Id:id},
-                success:function(){
-                    alert("取消成功！");
-                    // $("#moji"+id).text('关注');
+                url:"/userSaveKnowledge",
+                data: {Name:konwledgeName},
+                success:function (result) {
+                    console.log("result:"+result)
+                    alert("添加成功，等待管理员审批！");
                     window.location.reload();
                 }
-            });
-            return true;
-        }
-        else
-        {
-            return false;
+            })
         }
     }
-
-
-
-
 </script>
 </body>
 </html>

@@ -47,8 +47,12 @@
                 <p class="login-box-msg" style="color: red">{{.Tip}}</p>
                 <div class="row">
                     <!-- /.col -->
-                    <div class="col-4">
-                        <button type="submit" class="btn btn-block btn-primary btn-lg" style="width:320px">登   录</button>
+                    <div class="" style="margin-left: 10px">
+                        <input type="button" onclick="regist()" class="btn btn-block btn-primary btn-lg" value="注   册" style="width:150px">
+                        <!--button class="btn btn-block btn-primary btn-lg" style="width:150px" onclick="regist()">注   册</button-->
+                    </div>
+                    <div class="" style="margin-left: 10px">
+                        <button type="submit" class="btn btn-block btn-primary btn-lg" style="width:150px">登   录</button>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -65,6 +69,11 @@
 <script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/static/js/adminlte.min.js"></script>
-
+<!--Javascript-->
+<script>
+function regist() {
+    window.location.href = "/LinkToRegist"
+}
+</script>
 </body>
 </html>
