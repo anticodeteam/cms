@@ -38,7 +38,7 @@
 
         <div id="base" class="">
 
-            <div id="tests">  </div>
+            <div id="tests"></div>
 
 
             <!-- Unnamed (矩形) -->
@@ -51,50 +51,50 @@
             </div>
 
 
-    </div>
+        </div>
 
         <input type="hidden" id="articleid" value="{{.articleId}}">
-    <!-- /.control-sidebar -->
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+
+    <!-- jQuery -->
+    <script src="/static/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/static/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="/static/js/demo.js"></script>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            var id = $("#articleid").val()
+            $.ajax({
+                type: "post",
+                url: "/getArticle",
+                data: {articleid: id},
+                success: function (data) {
+                    console.log("data:" + data[0].Detail);
+                    $("#tests").html(data[0].Detail);
+                }
+            });
+        }
+
+        function add() {
+            var id = $("#articleid").val()
+            $.ajax({
+                type: "post",
+                url: "/addCollection",
+                data: {articleid: id},
+                success: function (data) {
+                    alert("收藏成功！")
+                }
+            });
+        }
+
+
+    </script>
 </div>
-<!-- ./wrapper -->
-
-<!-- jQuery -->
-<script src="/static/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="/static/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="/static/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="/static/js/demo.js"></script>
-
-<script type="text/javascript">
-    window.onload = function () {
-        var id = $("#articleid").val()
-        $.ajax({
-            type:"post",
-            url:"/getArticle",
-            data:{articleid:id},
-            success:function(data){
-                console.log("data:"+data[0].Detail);
-                $("#tests").html(data[0].Detail);
-            }
-        });
-    }
-
-    function add() {
-        var id = $("#articleid").val()
-        $.ajax({
-            type:"post",
-            url:"/addCollection",
-            data:{articleid:id},
-            success:function(data){
-                alert("收藏成功！")
-            }
-        });
-    }
-
-
-</script>
-
 </body>
 </html>
