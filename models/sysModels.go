@@ -99,19 +99,27 @@ func SearchTemplate(id int) string {
 	o := orm.NewOrm()
 	t1 := new(Cms_Tree) //一级目录集合
 	t2 := new(Cms_Tree) //二级目录集合
-	o.Raw("select * from tree where  id = ?", id).QueryRow(&t2)
+	//qs1 := o.QueryTable(new(Cms_Tree))
+	//qs2 := o.QueryTable(new(Cms_Tree))
+	//qs2.Filter("id",id).Limit(1).All(&t2)
+	o.Raw("select * from Cms_Tree where  id = ?", id).QueryRow(&t2)
 	if t2.Pid == 0 {
 		return t2.Title //返回一级目录的标题及ID
 	}
-	o.Raw("select * from tree where  id = ?", t2.Pid).QueryRow(&t1)
+	//qs1.Filter("id",t2.Pid).All(&t1)
+	o.Raw("select * from Cms_Tree where  id = ?", t2.Pid).QueryRow(&t1)
 	return t1.Title //T1标题是一级目录标题  T2标题是二级目录标题
 }
 
 func EditTrees(title string, pid int) error {
 	o := orm.NewOrm()
-	res, err := o.Raw("UPDATE tree SET title = ? WHERE id = ?", title, pid).Exec()
+	tree := Cms_Tree{pid, "", 0}
+	o.Read(&tree)
+	tree.Title = title
+
+	num, err := o.Update(&tree) //o.Raw("UPDATE Cms_Tree SET title = ? WHERE id = ?", title, pid).Exec()
 	if err == nil {
-		num, _ := res.RowsAffected()
+
 		fmt.Println("mysql row affected nums: ", num)
 	}
 	return err
@@ -119,9 +127,11 @@ func EditTrees(title string, pid int) error {
 
 func DeleteTrees(pid int) error {
 	o := orm.NewOrm()
-	res, err := o.Raw("DELETE FROM tree  WHERE id = ?", pid).Exec()
+	tree := Cms_Tree{pid, "", 0}
+	num, err := o.Delete(&tree)
+	//res, err := o.Raw("DELETE FROM Cms_Tree  WHERE id = ?", pid).Exec()
 	if err == nil {
-		num, _ := res.RowsAffected()
+		//num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
 	}
 	return err
