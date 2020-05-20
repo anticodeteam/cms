@@ -129,6 +129,7 @@
             type:"post",
             url:"/getknowledge",
             success:function(data){
+                debugger;
                 var tablestr = "";
                 var len = data.length;
                 console.log(data);
@@ -144,9 +145,7 @@
                             tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='addGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>关注</a>" + "</td>";
                         }else{
                             tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='deleteGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>取消关注</a>" + "</td>";
-
                         }
-
                         tablestr += "</tr><tr><td colspan='4'><table style='width: 100%' id='div"+ data[i].Id +"'>";
                         for(var j = 0; j < len; j++){
                             if (data[i].Id == data[j].Pid){

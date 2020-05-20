@@ -516,8 +516,19 @@
                     for (var i = 0; i < len; i++){
                         tablestr +=   "<tr>";              //onclick
                         // tablestr +=   "<td >" + "<input type='checkbox'>" + "</td>";
-                        tablestr +=   "<td>" + data[i].Title + "</td>" ;
-                        tablestr +=   "<td><a href='#' onclick='edit(" + data[i].Id + ",\"" + data[i].Title +"\")'>编辑</a><span> </span><a href='#' onclick='deletes(" + data[i].Id + ")'>删除</a></td>" + "</tr>";
+                        tablestr +=     "<td>" + data[i].Title + "</td>" ;
+                        tablestr +=     "<td>" +
+                                        "<a href='#' onclick='edit(" + data[i].Id + ",\"" + data[i].Title +"\")'>编辑</a>" +
+                                        "<span> </span>" +
+                                        "<a href='#' onclick='deletes(" + data[i].Id + ")'>删除</a>" +
+                                        "<span> </span>"
+                        var up = ""
+                        if(data[i].Status == 0){
+                            up = "<a href='#' onclick='changeKnowledgeStatus(" + data[i].Id + ",1)'>上架</a>"
+                        }else{
+                            up = "<a href='#' onclick='changeKnowledgeStatus(" + data[i].Id + ",0)'>下架</a>"
+                        }
+                        tablestr +=  up + "</td>" + "</tr>";
                     }
                     $("#bodys").html(tablestr)
 
@@ -662,9 +673,6 @@
             }
         })
     }
-
-
-
 </script>
 
 </body>

@@ -111,4 +111,5 @@ func init() {
 
 	//管理员修改知识点审批状态
 	beego.Router("/changeKnowledgeStatus", &controllers.KnowController{}, "*:ChangeKnowledgeStatus")
+
 }

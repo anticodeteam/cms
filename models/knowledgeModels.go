@@ -43,11 +43,12 @@ func GetInformationByKonwledge() (dataList []interface{}, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Cms_Knowledge))
 	//查询
-	//查询数据
+	//查询数据 pid==0，代表一级目录
 	if _, err = qs.Filter("pid__exact", 0).Filter("gid__exact", 0).All(&list); err == nil {
 		for _, v := range list {
 			dataList = append(dataList, v)
 		}
+		fmt.Println("This datalist--->", dataList)
 		return dataList, nil
 	}
 	return nil, err
@@ -107,12 +108,12 @@ func GetMoreDirectorys(title string) (dataList []interface{}, err error) {
 	//o.Raw("select * from cms__knowledge where title = ?", title).QueryRow(&know)
 	//orm.Filter
 	qs.Filter("title", title).One(&know)
-	fmt.Println("know", know)
+	fmt.Println("GetMoreDirectorys_know", know)
 	//查询
 	//查询数据
 	//if _, err = qs.Filter("pid__exact", 0).Filter("gid__exact", 0).All(&list); err == nil {
 	if _, err = qs.Filter("pid", know.Id).All(&list); err == nil {
-		fmt.Println("list_2", list)
+		fmt.Println("GetMoreDirectorys_list", list)
 		for _, v := range list {
 			dataList = append(dataList, v)
 		}
@@ -125,15 +126,19 @@ func GetMoreDirectorys(title string) (dataList []interface{}, err error) {
 func Knowledges(userid interface{}) (dataList []interface{}, err error) {
 	var list []Cms_Knowledge
 	var data = new(Cms_Knowledge2)
+	Uid := userid.(int)
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Cms_Knowledge))
+
+	cond := orm.NewCondition()
+	cond1 := cond.And("creater__in", "admin", Uid).Or("status", 1)
 	//if _, err = qs.Filter("pid__exact", 0).All(&list); err == nil {            只查询一级目录
-	if _, err = qs.Filter("status", 1).All(&list); err == nil { //查询全部
+	//if _, err = qs.Filter("creater__in", "admin",Uid).All(&list); err == nil { //查询全部
+	if _, err = qs.SetCond(cond1).All(&list); err == nil { //查询全部
 		for _, v := range list {
 			if userid == nil {
 				data = &Cms_Knowledge2{v.Id, v.Title, v.Pid, v.Gid, 0, v.UpdateTime, v.Creater, v.Status} //自定义输入内容，前台根据isguanzhu来判定是否显示取消关注，还差一个查询关注表的内容
 			} else {
-
 				data = &Cms_Knowledge2{v.Id, v.Title, v.Pid, v.Gid, IsGuanzhu(userid.(int), v.Id), v.UpdateTime, v.Creater, v.Status} //自定义输入内容，前台根据isguanzhu来判定是否显示取消关注，还差一个查询关注表的内容
 			}
 
@@ -283,13 +288,10 @@ func UserSaveKonwledgeAction(Name string, Uid interface{}) error {
 }
 
 func ChangeKnowledgeStatusAction(Id int, Status int) {
-	fmt.Println("-------------修改知识点状态-------------")
 	o := orm.NewOrm()
 	Knowledge := Cms_Knowledge{Id: Id}
 	if o.Read(&Knowledge) == nil {
 		Knowledge.Status = Status
-		if num, err := o.Update(&Knowledge); err == nil {
-			fmt.Println(num)
-		}
+		o.Update(&Knowledge)
 	}
 }

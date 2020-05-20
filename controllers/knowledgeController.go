@@ -201,7 +201,7 @@ func (c *KnowController) UserSaveKonwledge() {
 	}
 }
 
-//
+//管理员修改知识点审批状态
 func (c *KnowController) ChangeKnowledgeStatus() {
 	id, _ := c.GetInt("id")
 	status, _ := c.GetInt("status")
