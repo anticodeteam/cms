@@ -140,7 +140,13 @@
                         tablestr += "<td>" + data[i].Title + "</td>";
                         tablestr += "<td>" + data[i].Creater + "</td>";
                         tablestr += "<td>" + data[i].UpdateTime + "</td>";
-                        tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='addGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>关注</a>" + "</td>";
+                        if(data[i].Isguanzhu == 0){
+                            tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='addGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>关注</a>" + "</td>";
+                        }else{
+                            tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='deleteGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>取消关注</a>" + "</td>";
+
+                        }
+
                         tablestr += "</tr><tr><td colspan='4'><table style='width: 100%' id='div"+ data[i].Id +"'>";
                         for(var j = 0; j < len; j++){
                             if (data[i].Id == data[j].Pid){
@@ -195,11 +201,33 @@
             success:function(data){
                 if (data.flag == true){
                     console.log("id:"+id);
-                    $("#moji"+id).text('取消关注');
+                    // $("#moji"+id).text('取消关注');
+                    window.location.reload();
                 }
             }
         });
     }
+    function deleteGuanzhuInfo(id){
+        if(confirm("确定要取消关注吗？"))
+        {
+            $.ajax({
+                type:"post",
+                url:"/deleteGuanzhu",
+                data: {Id:id},
+                success:function(){
+                    alert("取消成功！");
+                    // $("#moji"+id).text('关注');
+                    window.location.reload();
+                }
+            });
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     function userSaveKnowledge() {
         var konwledgeName = $("#knowledge").val();

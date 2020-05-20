@@ -54,10 +54,28 @@ func AddGuanzhuInformation(userId interface{}, id, pid int) (isinsert int64) {
 
 func DeleteGuanzhuInfo(id int, uid interface{}) error {
 	o := orm.NewOrm()
-	res, err := o.Raw("DELETE FROM guanzhu  WHERE knowledge_id = ? and uid = ?", id, uid).Exec()
+
+	qs := o.QueryTable("Cms_Guanzhu")
+
+	num, err := qs.Filter("knowledge_id", id).Filter("uid", uid).Delete()
+
+	//res, err := o.Raw("DELETE FROM cms_guanzhu  WHERE knowledge_id = ? and uid = ?", id, uid).Exec()
 	if err == nil {
-		num, _ := res.RowsAffected()
+		//num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
 	}
 	return err
+}
+
+//查询是否关注
+func IsGuanzhu(userId int, knowledgeId int) int {
+	var list []Cms_Guanzhu
+	o := orm.NewOrm()
+	qs := o.QueryTable("Cms_Guanzhu")
+	qs.Filter("knowledge_id", knowledgeId).Filter("uid", userId).All(&list)
+	if len(list) > 0 {
+		return 1
+	}
+	return 0
+
 }

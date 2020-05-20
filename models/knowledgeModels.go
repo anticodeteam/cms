@@ -106,13 +106,13 @@ func GetMoreDirectorys(title string) (dataList []interface{}, err error) {
 	//原生SQL写法
 	//o.Raw("select * from cms__knowledge where title = ?", title).QueryRow(&know)
 	//orm.Filter
-	qs.Filter("title",title).One(&know)
-	fmt.Println("know",know)
+	qs.Filter("title", title).One(&know)
+	fmt.Println("know", know)
 	//查询
 	//查询数据
 	//if _, err = qs.Filter("pid__exact", 0).Filter("gid__exact", 0).All(&list); err == nil {
 	if _, err = qs.Filter("pid", know.Id).All(&list); err == nil {
-		fmt.Println("list_2",list)
+		fmt.Println("list_2", list)
 		for _, v := range list {
 			dataList = append(dataList, v)
 		}
@@ -122,15 +122,21 @@ func GetMoreDirectorys(title string) (dataList []interface{}, err error) {
 }
 
 //测试自建结构体插入
-func Knowledges() (dataList []interface{}, err error) {
+func Knowledges(userid interface{}) (dataList []interface{}, err error) {
 	var list []Cms_Knowledge
 	var data = new(Cms_Knowledge2)
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Cms_Knowledge))
 	//if _, err = qs.Filter("pid__exact", 0).All(&list); err == nil {            只查询一级目录
-	if _, err = qs.Filter("status",1).All(&list); err == nil { //查询全部
+	if _, err = qs.Filter("status", 1).All(&list); err == nil { //查询全部
 		for _, v := range list {
-			data = &Cms_Knowledge2{v.Id, v.Title, v.Pid, v.Gid, 0, v.UpdateTime, v.Creater,v.Status} //自定义输入内容，前台根据isguanzhu来判定是否显示取消关注，还差一个查询关注表的内容
+			if userid == nil {
+				data = &Cms_Knowledge2{v.Id, v.Title, v.Pid, v.Gid, 0, v.UpdateTime, v.Creater, v.Status} //自定义输入内容，前台根据isguanzhu来判定是否显示取消关注，还差一个查询关注表的内容
+			} else {
+
+				data = &Cms_Knowledge2{v.Id, v.Title, v.Pid, v.Gid, IsGuanzhu(userid.(int), v.Id), v.UpdateTime, v.Creater, v.Status} //自定义输入内容，前台根据isguanzhu来判定是否显示取消关注，还差一个查询关注表的内容
+			}
+
 			dataList = append(dataList, *data)
 		}
 		fmt.Println("datalist_Knowledge:", dataList)
@@ -189,8 +195,8 @@ func DeleteKnowledge(pid int) error {
 		fmt.Println("mysql row affected nums: ", num)
 	}*/
 	//orm.Delete
-	num, err := o.Delete(&Cms_Knowledge{Id:pid});
-	if err == nil{
+	num, err := o.Delete(&Cms_Knowledge{Id: pid})
+	if err == nil {
 		fmt.Println("mysql row affected nums: ", num)
 	}
 	return err
@@ -259,7 +265,7 @@ func JumpAllKnowPage(id int) (dataList []interface{}, err error) {
 	return nil, err
 }
 
-func UserSaveKonwledgeAction(Name string,Uid interface{}) error{
+func UserSaveKonwledgeAction(Name string, Uid interface{}) error {
 	t := time.Now()
 	o := orm.NewOrm()
 	//Knowledge各项属性赋值
@@ -269,20 +275,20 @@ func UserSaveKonwledgeAction(Name string,Uid interface{}) error{
 	Knowledge.Pid = 0
 	Knowledge.Status = 0
 	Knowledge.UpdateTime = t.Format("2006-01-02 15:04:05")
-	_,err := o.Insert(Knowledge)
+	_, err := o.Insert(Knowledge)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func ChangeKnowledgeStatusAction(Id int,Status int) (){
+func ChangeKnowledgeStatusAction(Id int, Status int) {
 	fmt.Println("-------------修改知识点状态-------------")
 	o := orm.NewOrm()
-	Knowledge := Cms_Knowledge{Id:Id}
+	Knowledge := Cms_Knowledge{Id: Id}
 	if o.Read(&Knowledge) == nil {
 		Knowledge.Status = Status
-		if num,err := o.Update(&Knowledge);err == nil {
+		if num, err := o.Update(&Knowledge); err == nil {
 			fmt.Println(num)
 		}
 	}

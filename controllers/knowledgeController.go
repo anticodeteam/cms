@@ -61,7 +61,8 @@ func (c *KnowController) GetMoreDirectory() {
 
 //拼写前端页面知识库画面
 func (c *KnowController) GetKnowledge() {
-	datalist, err := models.Knowledges()
+	userId := c.GetSession("UserID")
+	datalist, err := models.Knowledges(userId)
 	if err == nil {
 		c.Data["json"] = datalist
 	}
@@ -190,8 +191,8 @@ func (c *KnowController) GetArticleList() {
 func (c *KnowController) UserSaveKonwledge() {
 	knowledgeName := c.GetString("Name")
 	uid := c.GetSession("UserID")
-	fmt.Println(knowledgeName,uid)
-	err := models.UserSaveKonwledgeAction(knowledgeName,uid)
+	fmt.Println(knowledgeName, uid)
+	err := models.UserSaveKonwledgeAction(knowledgeName, uid)
 	logs.Info("err:", err)
 	if err != nil {
 		c.ServeJSON()
@@ -202,9 +203,8 @@ func (c *KnowController) UserSaveKonwledge() {
 
 //
 func (c *KnowController) ChangeKnowledgeStatus() {
-	id,_ := c.GetInt("id")
-	status,_ := c.GetInt("status")
-	models.ChangeKnowledgeStatusAction(id,status)
+	id, _ := c.GetInt("id")
+	status, _ := c.GetInt("status")
+	models.ChangeKnowledgeStatusAction(id, status)
 	c.TplName = "knowledge.tpl"
 }
-

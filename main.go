@@ -1,11 +1,11 @@
 package main
 
 import (
+	_ "cms/models"
+	_ "cms/routers"
 	"github.com/astaxie/beego"
 	_ "github.com/astaxie/beego/session/mysql"
 	_ "github.com/go-sql-driver/mysql"
-	_ "mvc/models"
-	_ "mvc/routers"
 )
 
 type User struct {

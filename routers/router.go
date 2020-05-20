@@ -1,23 +1,23 @@
 package routers
 
 import (
+	"cms/controllers"
 	"github.com/astaxie/beego"
-	"mvc/controllers"
 )
 
 func init() {
 	//跳转到超级管理员页面
-	beego.Router("/User",&controllers.MainController{},"*:LinktoAgent")
+	beego.Router("/User", &controllers.MainController{}, "*:LinktoAgent")
 	//分配权限
-	beego.Router("/Assign",&controllers.MainController{},"*:AssignAgent")
+	beego.Router("/Assign", &controllers.MainController{}, "*:AssignAgent")
 
 	beego.Router("/", &controllers.MainController{})
 	//跳转到注册
-	beego.Router("/LinkToRegist", &controllers.MainController{},"*:RegistUser")
+	beego.Router("/LinkToRegist", &controllers.MainController{}, "*:RegistUser")
 	//注册DB信息
-	beego.Router("/registDBInfoAction", &controllers.MainController{},"*:RegistDbInfo")
+	beego.Router("/registDBInfoAction", &controllers.MainController{}, "*:RegistDbInfo")
 	//取消注册
-	beego.Router("/RegisCancel",&controllers.MainController{},"*:CancelRegist")
+	beego.Router("/RegisCancel", &controllers.MainController{}, "*:CancelRegist")
 
 	beego.Router("/homeAction", &controllers.MainController{}, "*:Home")
 
@@ -107,8 +107,8 @@ func init() {
 	beego.Router("/deleteTree", &controllers.SysController{}, "*:DeleteTree")
 
 	//用户页面上传知识等待审批
-	beego.Router("/userSaveKnowledge", &controllers.KnowController{},"*:UserSaveKonwledge")
+	beego.Router("/userSaveKnowledge", &controllers.KnowController{}, "*:UserSaveKonwledge")
 
 	//管理员修改知识点审批状态
-	beego.Router("/changeKnowledgeStatus", &controllers.KnowController{},"*:ChangeKnowledgeStatus")
+	beego.Router("/changeKnowledgeStatus", &controllers.KnowController{}, "*:ChangeKnowledgeStatus")
 }
