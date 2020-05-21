@@ -112,7 +112,7 @@ func init() {
 	//管理员修改知识点审批状态
 	beego.Router("/changeKnowledgeStatus", &controllers.KnowController{}, "*:ChangeKnowledgeStatus")
 
-	//测试模板语言
+	//测试模板组件语言
 	beego.Router("/model", &controllers.SysController{}, "*:ModelInit")
 
 }
