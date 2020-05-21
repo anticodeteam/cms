@@ -16,6 +16,7 @@ type Cms_Knowledge struct {
 	UpdateTime string
 	Creater    string
 	Status     int
+	Filename   string
 }
 
 type Cms_Knowledge2 struct {
