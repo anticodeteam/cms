@@ -114,5 +114,6 @@ func init() {
 
 	//测试模板组件语言
 	beego.Router("/model", &controllers.SysController{}, "*:ModelInit")
+	beego.Router("/modelAdmin", &controllers.SysController{}, "*:ModelAdmin")
 
 }

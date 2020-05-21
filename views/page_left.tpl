@@ -162,6 +162,8 @@
 
 
     <div>
+        {{template "user_knowledge.tpl" .}}
+{{/*        {{.LayoutContent}}*/}}
         <iframe src="/admin/01"  frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=850"  style="display: none"></iframe>
     </div>
 
@@ -235,6 +237,7 @@
                                tablestr += "<p>" + data[i].Title + "<i class='fas fa-angle-left right'></i>" + "</p>" + "</a>";
                            }else {
                                tablestr += "<a href='#' onclick='reinitIframe("+data[i].Id +")' class='nav-link'>";
+                               // tablestr += "<a href='/admin/"+data[i].Id +"' class='nav-link'>";
                                tablestr += "<p>" + data[i].Title +  "</p>" + "</a>";
                            }
                            for  (var j = 0; j < len; j++){
@@ -242,11 +245,12 @@
                                    if(data.length == j+1){
                                        tablestr += "</li>";
                                    }
-                                   continue;
+
                                }else if (num == data[j].Pid){
                                    tablestr += "<ul class='nav nav-treeview'>";
                                    tablestr += "<li class='nav-item'>";
                                    tablestr += "<a href='#' onclick='reinitIframe("+data[j].Id +")' class='nav-link'>";
+                                   // tablestr += "<a href='/admin/"+data[j].Id +"' class='nav-link'>";
                                    tablestr += "<i class='far fa-circle nav-icon'>" + "</i>";
                                    tablestr += "<p>" + data[j].Title + "</p>";
                                    tablestr += "</a>" + "</li>" + "</ul>";

@@ -66,6 +66,7 @@ func (c *SysController) Admin() {
 		title1 := models.SearchTemplate(id)
 		c.Data["BigTitle"] = title1
 		c.Data["List"] = datalist
+		//c.Layout = "layout/AjaxFresh.tpl.tpl"
 		c.TplName = "user_knowledge.tpl"
 	case 2:
 		c.TplName = "user_guanzhu.tpl"
@@ -109,5 +110,16 @@ func (this *SysController) ModelInit() {
 	this.LayoutSections = make(map[string]string)
 	this.LayoutSections["HtmlHead"] = ""
 	this.LayoutSections["Scripts"] = ""
-	this.LayoutSections["Sidebar"] = ""
+}
+
+//测试模板
+func (this *SysController) ModelAdmin() {
+	id, _ := this.GetInt("Id") //获取前台传的值
+	datalist, _ := models.GetInformationByKonwledge()
+	title1 := models.SearchTemplate(id)
+	this.Data["BigTitle"] = title1
+	this.Data["List"] = datalist
+	this.Layout = "page_left.tpl"
+	this.TplName = "user_knowledge.tpl"
+
 }

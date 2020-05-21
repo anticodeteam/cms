@@ -131,8 +131,9 @@
         })
     });
 
-    window.onload = function () {
+    $(function () {
         $.ajax({
+
             type:"post",
             url:"/getknowledge",
             success:function(data){
@@ -177,17 +178,10 @@
                 $("#bodys").html(tablestr);
             }
         });
-        debugger;
-        $('#knowTable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": false,
-            "info": true,
-            "autoWidth": true,
-            "responsive": true,
-        });
-    }
+
+
+    })
+
 </script>
 
 
