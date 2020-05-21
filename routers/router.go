@@ -20,7 +20,7 @@ func init() {
 	beego.Router("/RegisCancel", &controllers.MainController{}, "*:CancelRegist")
 
 	beego.Router("/homeAction", &controllers.MainController{}, "*:Home")
-
+	//登录
 	beego.Router("/loginAction", &controllers.MainController{}, "*:Login")
 
 	beego.Router("/treeview", &controllers.SysController{}, "*:Tree")
