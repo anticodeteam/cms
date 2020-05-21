@@ -270,10 +270,12 @@
                                             <span> </span>
                                             <a href="#" onclick="deletes({{.Id}})">删除</a>
                                             <span> </span>
-                                            {{if eq .Status 0}}
-                                                <a href="#" onclick="changeKnowledgeStatus({{.Id}},1)">上架</a>
+                                            {{if eq .Status 1}}
+                                                <a href="#" onclick="changeKnowledgeStatus({{.Id}},3)">批准上架</a>
                                             {{else}}
-                                                <a href="#" onclick="changeKnowledgeStatus({{.Id}},0)">下架</a>
+                                                {{if eq .Status 2}}
+                                                <a href="#" onclick="changeKnowledgeStatus({{.Id}},0)">批准下架</a>
+                                                {{end}}
                                             {{end}}
                                         </th>
                                     </tr>
@@ -522,11 +524,11 @@
                                         "<span> </span>" +
                                         "<a href='#' onclick='deletes(" + data[i].Id + ")'>删除</a>" +
                                         "<span> </span>"
-                        var up = ""
-                        if(data[i].Status == 0){
-                            up = "<a href='#' onclick='changeKnowledgeStatus(" + data[i].Id + ",1)'>上架</a>"
-                        }else{
-                            up = "<a href='#' onclick='changeKnowledgeStatus(" + data[i].Id + ",0)'>下架</a>"
+
+                        if(data[i].Status == 1){
+                            tablestr += "<a href='#' onclick='changeKnowledgeStatus(" + data[i].Id + ",1)'>上架</a>"
+                        }else if(data[i].Status == 2){
+                            tablestr += "<a href='#' onclick='changeKnowledgeStatus(" + data[i].Id + ",0)'>下架</a>"
                         }
                         tablestr +=  up + "</td>" + "</tr>";
                     }

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/static/css/adminlte.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -52,12 +53,13 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 100%;">
-                        <table class="table table-head-fixed text-nowrap">
+                        <table class="table table-head-fixed text-nowrap" id="knowTable">
                             <thead>
                             <tr>
                                 <th>名称</th>
                                 <th>创建者</th>
                                 <th>更新时间</th>
+                                <th>文件状态</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -113,8 +115,13 @@
 <script src="/static/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/static/js/demo.js"></script>
-
+<!-- DataTables -->
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/static/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/static/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
 <script type="text/javascript">
+
     $(document).ready(function() {
         $("#addButton").click(function() {
             $('#modalTable').modal({
@@ -129,7 +136,6 @@
             type:"post",
             url:"/getknowledge",
             success:function(data){
-                debugger;
                 var tablestr = "";
                 var len = data.length;
                 console.log(data);
@@ -141,18 +147,26 @@
                         tablestr += "<td>" + data[i].Title + "</td>";
                         tablestr += "<td>" + data[i].Creater + "</td>";
                         tablestr += "<td>" + data[i].UpdateTime + "</td>";
+                        if(data[i].Status == 0){
+                            tablestr += "<td><a href='#' onclick='changeKnowledgeStatus("+data[i].id+",1)'>申请上架</a></td>";
+                        }else if(data[i].Status == 1){
+                            tablestr += "<td><a href='#' onclick='changeKnowledgeStatus("+data[i].id+",0)'>取消申请</a></td>";
+                        }else{
+                            tablestr += "<td><a href='#' onclick='changeKnowledgeStatus("+data[i].id+",2)'>申请下架</a></td>";
+                        }
                         if(data[i].Isguanzhu == 0){
                             tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='addGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>关注</a>" + "</td>";
                         }else{
                             tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='deleteGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>取消关注</a>" + "</td>";
                         }
-                        tablestr += "</tr><tr><td colspan='4'><table style='width: 100%' id='div"+ data[i].Id +"'>";
+                        tablestr += "</tr><tr><td colspan='5'><table style='width: 100%' id='div"+ data[i].Id +"'>";
                         for(var j = 0; j < len; j++){
                             if (data[i].Id == data[j].Pid){
                                 tablestr += "<tr>";
                                 tablestr += "<td onclick='jump("+ data[j].Id +")'>" + data[j].Title + "</td>";
                                 tablestr += "<td onclick='jump("+ data[j].Id +")'>" + data[j].Creater + "</td>";
                                 tablestr += "<td onclick='jump("+ data[j].Id +")'>" + data[j].UpdateTime + "</td>";
+                                tablestr += "<td></td><td></td>"
                                 //tablestr += "<td>" + "<a href='#' id='moji" + data[j].Id + "\'    onclick='addGuanzhuInfo("+ data[j].Id + "," + data[j].Pid +")'>关注</a>" + "</td>";
                                 tablestr += "</tr>";
                             }
@@ -160,8 +174,18 @@
                         tablestr += "</table></td></tr>"
                     }
                 }
-                $("#bodys").html(tablestr)
+                $("#bodys").html(tablestr);
             }
+        });
+        debugger;
+        $('#knowTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": false,
+            "info": true,
+            "autoWidth": true,
+            "responsive": true,
         });
     }
 </script>
@@ -237,11 +261,26 @@
                 data: {Name:konwledgeName},
                 success:function (result) {
                     console.log("result:"+result)
-                    alert("添加成功，等待管理员审批！");
+                    alert("添加成功！");
                     window.location.reload();
                 }
             })
         }
+    }
+
+    function changeKnowledgeStatus(id,status) {
+        $.ajax({
+            type:"post",
+            url:"/changeThisStatus",
+            data:{Id:id,status:status},
+            success:function (result) {
+                alert("申请已提交，请耐心等待管理员处理！")
+                window.location.reload()
+            },
+            error:function () {
+                alert("申请提交失败")
+            }
+        })
     }
 </script>
 </body>

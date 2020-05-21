@@ -47,8 +47,8 @@ func GetInformationByKonwledge() (dataList []interface{}, err error) {
 	if _, err = qs.Filter("pid__exact", 0).Filter("gid__exact", 0).All(&list); err == nil {
 		for _, v := range list {
 			dataList = append(dataList, v)
+			fmt.Println("This data--->", v)
 		}
-		fmt.Println("This datalist--->", dataList)
 		return dataList, nil
 	}
 	return nil, err
@@ -131,7 +131,8 @@ func Knowledges(userid interface{}) (dataList []interface{}, err error) {
 	qs := o.QueryTable(new(Cms_Knowledge))
 
 	cond := orm.NewCondition()
-	cond1 := cond.And("creater__in", "admin", Uid).Or("status", 1)
+	//cond1 := cond.And("creater__in", "admin", Uid).Or("status", 1)
+	cond1 := cond.And("creater", "admin").And("status", 3).Or("creater", Uid)
 	//if _, err = qs.Filter("pid__exact", 0).All(&list); err == nil {            只查询一级目录
 	//if _, err = qs.Filter("creater__in", "admin",Uid).All(&list); err == nil { //查询全部
 	if _, err = qs.SetCond(cond1).All(&list); err == nil { //查询全部
@@ -183,7 +184,7 @@ func JumpToKnowledgePage() (dataList []interface{}, err error) {
 
 func EditKnowledge(title string, pid int) error {
 	o := orm.NewOrm()
-	res, err := o.Raw("UPDATE knowledge SET title = ? WHERE id = ?", title, pid).Exec()
+	res, err := o.Raw("UPDATE cms_knowledge SET title = ? WHERE id = ?", title, pid).Exec()
 	if err == nil {
 		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
