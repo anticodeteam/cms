@@ -116,9 +116,12 @@
             type:"post",
             url:"/addArticle",
             data: {text:texts,title:titles,id:id},
-            success:function(){
-                alert("添加成功！")
-                // $("#tests").html(texts)
+            success:function(data){
+                alert(data)
+                window.location.href="/jump?id="+ id
+            },
+            error:function (data) {
+                alert(data)
             }
         });
     }

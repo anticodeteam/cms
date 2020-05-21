@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0" style="height: 100%;">
+                    <div class="card-body table-responsive p-0" style="height: 600px;overflow-y:scroll;overflow-x: hidden">
                         <table class="table table-head-fixed text-nowrap" id="knowTable">
                             <thead>
                             <tr>
@@ -121,7 +121,6 @@
 <script src="/static/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="/static/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
 <script type="text/javascript">
-
     $(document).ready(function() {
         $("#addButton").click(function() {
             $('#modalTable').modal({
@@ -139,7 +138,6 @@
                 var tablestr = "";
                 var len = data.length;
                 console.log(data);
-                console.log("长度："+len);
                 //先拼出一个一级目录，然后查询它是否存在子目录，如存在就插入在它后面，如不存在，则继续拼下一个一级目录依次循环
                 for (var i = 0; i < len; i++)   {
                     if (data[i].Pid == 0 && data[i].Gid == 0){
@@ -177,16 +175,15 @@
                 $("#bodys").html(tablestr);
             }
         });
-        debugger;
-        $('#knowTable').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": false,
-            "info": true,
-            "autoWidth": true,
-            "responsive": true,
-        });
+        // $('#knowTable').DataTable({
+        //     "paging": true,
+        //     "lengthChange": false,
+        //     "searching": false,
+        //     "ordering": false,
+        //     "info": true,
+        //     "autoWidth": true,
+        //     "responsive": true,
+        // });
     }
 </script>
 

@@ -162,7 +162,7 @@
 
 
     <div>
-        <iframe src="/admin/01"  frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=850"  style="display: none"></iframe>
+        <iframe src="/admin/01"  frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=800"  style="display: none"></iframe>
     </div>
 
 
@@ -242,7 +242,7 @@
                                    if(data.length == j+1){
                                        tablestr += "</li>";
                                    }
-                                   continue;
+
                                }else if (num == data[j].Pid){
                                    tablestr += "<ul class='nav nav-treeview'>";
                                    tablestr += "<li class='nav-item'>";
@@ -265,6 +265,12 @@
 </script>
 
 <script type="text/javascript">
+    $(document.body).css({
+        "overflow-x":"hidden",
+        "overflow-y":"hidden",
+        "overflow":"hidden"
+    });
+
     function reinitIframe(id){//http://caibaojian.com/frame-adjust-content-height.html
         $("#iframepage").css("display","block");
         var iframe = document.getElementById("iframepage");

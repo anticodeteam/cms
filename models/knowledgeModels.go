@@ -213,27 +213,34 @@ func DeleteKnowledge(pid int) error {
 	return err
 }
 
-func InsertArticle(text, title string, id int) error {
+func InsertArticle(text, title string, id int, uid interface{}) (nilMsg string, err error) {
 	t := time.Now() //设置当前时间
 	o := orm.NewOrm()
+	//声明两个对象，一个存知识库表，一个存文章表
 	category := &Cms_Article{}
 	data := &Cms_Knowledge{}
+	//知识库对象赋值
 	data.Title = title
 	data.Pid = 0
-	data.Creater = "admin"
+	data.Creater = strconv.Itoa(uid.(int))
 	data.Gid = id
-	data.UpdateTime = t.String()
+	data.UpdateTime = t.Format("2006-01-02 15:04:05")
+	if data.Title == "" {
+		nilMsg = "文章名不能为空！"
+		return nilMsg, nil
+	}
 	dataId, _ := o.Insert(data)
+	//文章表对象赋值
 	category.KnowledgeId = int(dataId)
 	category.Title = title
 	category.Detail = text
-	category.Time = t.String() //将时间转换成string类型进行保存
-	category.Creater = "admin"
-	_, err := o.Insert(category)
+	category.Time = t.Format("2006-01-02 15:04:05") //将时间转换成string类型进行保存
+	category.Creater = strconv.Itoa(uid.(int))
+	_, err = o.Insert(category)
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return "", nil
 }
 
 func GetArticles(id int) (dataList []interface{}, err error) {
