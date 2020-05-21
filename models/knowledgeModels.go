@@ -184,9 +184,14 @@ func JumpToKnowledgePage() (dataList []interface{}, err error) {
 
 func EditKnowledge(title string, pid int) error {
 	o := orm.NewOrm()
-	res, err := o.Raw("UPDATE cms_knowledge SET title = ? WHERE id = ?", title, pid).Exec()
+	knowledge := Cms_Knowledge{}
+	knowledge.Id = pid
+	o.Read(&knowledge)
+	knowledge.Title = title
+	num, err := o.Update(&knowledge)
+	//res, err := o.Raw("UPDATE knowledge SET title = ? WHERE id = ?", title, pid).Exec()
 	if err == nil {
-		num, _ := res.RowsAffected()
+		//num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
 	}
 	return err
