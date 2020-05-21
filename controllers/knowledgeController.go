@@ -153,20 +153,13 @@ func (c *KnowController) AddArticle() {
 	texts := c.GetString("text")
 	title := c.GetString("title")
 	id, _ := c.GetInt("id")
-	uid := c.GetSession("UserID")
-	Msg, err := models.InsertArticle(texts, title, id, uid)
-	if Msg == "" {
-		if err != nil {
-			c.ServeJSON()
-		} else {
-			c.Data["json"] = "添加成功！"
-			c.ServeJSON()
-		}
+	err := models.InsertArticle(texts, title, id)
+	logs.Info("dataList :", err)
+	if err != nil {
+		c.ServeJSON()
 	} else {
-		c.Data["json"] = Msg
 		c.ServeJSON()
 	}
-
 }
 
 //显示知识文章

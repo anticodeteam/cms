@@ -47,8 +47,8 @@ func GetInformationByKonwledge() (dataList []interface{}, err error) {
 	if _, err = qs.Filter("pid__exact", 0).Filter("gid__exact", 0).All(&list); err == nil {
 		for _, v := range list {
 			dataList = append(dataList, v)
-			fmt.Println("This data--->", v)
 		}
+		fmt.Println("This datalist--->", dataList)
 		return dataList, nil
 	}
 	return nil, err
@@ -131,8 +131,7 @@ func Knowledges(userid interface{}) (dataList []interface{}, err error) {
 	qs := o.QueryTable(new(Cms_Knowledge))
 
 	cond := orm.NewCondition()
-	//cond1 := cond.And("creater__in", "admin", Uid).Or("status", 1)
-	cond1 := cond.And("creater", "admin").And("status", 3).Or("creater", Uid)
+	cond1 := cond.And("creater__in", "admin", Uid).Or("status", 1)
 	//if _, err = qs.Filter("pid__exact", 0).All(&list); err == nil {            只查询一级目录
 	//if _, err = qs.Filter("creater__in", "admin",Uid).All(&list); err == nil { //查询全部
 	if _, err = qs.SetCond(cond1).All(&list); err == nil { //查询全部
@@ -208,34 +207,27 @@ func DeleteKnowledge(pid int) error {
 	return err
 }
 
-func InsertArticle(text, title string, id int, uid interface{}) (nilMsg string, err error) {
+func InsertArticle(text, title string, id int) error {
 	t := time.Now() //设置当前时间
 	o := orm.NewOrm()
-	//声明两个对象，一个存知识库表，一个存文章表
 	category := &Cms_Article{}
 	data := &Cms_Knowledge{}
-	//知识库对象赋值
 	data.Title = title
 	data.Pid = 0
-	data.Creater = strconv.Itoa(uid.(int))
+	data.Creater = "admin"
 	data.Gid = id
-	data.UpdateTime = t.Format("2006-01-02 15:04:05")
-	if data.Title == "" {
-		nilMsg = "文章名不能为空！"
-		return nilMsg, nil
-	}
+	data.UpdateTime = t.String()
 	dataId, _ := o.Insert(data)
-	//文章表对象赋值
 	category.KnowledgeId = int(dataId)
 	category.Title = title
 	category.Detail = text
-	category.Time = t.Format("2006-01-02 15:04:05") //将时间转换成string类型进行保存
-	category.Creater = strconv.Itoa(uid.(int))
-	_, err = o.Insert(category)
+	category.Time = t.String() //将时间转换成string类型进行保存
+	category.Creater = "admin"
+	_, err := o.Insert(category)
 	if err != nil {
-		return "", err
+		return err
 	}
-	return "", nil
+	return nil
 }
 
 func GetArticles(id int) (dataList []interface{}, err error) {

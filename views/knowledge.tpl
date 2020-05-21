@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="/static/css/adminlte.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -107,7 +106,8 @@
     }
     function upload() {
         var id = $("#fid").val()
-        window.location.href="/Jumpupload?id="+ id;
+        //alert(id)
+        window.location.href="/Jumpupload?id="+id;
     }
 </script>
 

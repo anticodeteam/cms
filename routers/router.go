@@ -118,4 +118,5 @@ func init() {
 	beego.Router("/upload", &controllers.KnowController{}, "*:UploadFile")
 	//上传文件名到数据库
 	beego.Router("/addfilename", &controllers.KnowController{}, "*:Addfilename")
+
 }

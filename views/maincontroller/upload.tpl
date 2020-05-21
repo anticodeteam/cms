@@ -19,19 +19,20 @@
 </head>
 <body>
 <p>{{.titleid}}</p>
-    <div style="margin-left: 300px">
-        <form id="fform" method="POST"  action="upload" enctype="multipart/form-data">
-            <input id="myfile" name="file" type="file" />
-            <input type="submit" value="保存" onclick="add()"  class="btn btn-block btn-outline-primary" style="width: 150px;margin-top: 10px"/>
-        </form>
-        <input type="hidden" id="titleid" value="{{.titleid}}">
-    </div>
+<div style="margin-left: 300px">
+    <form id="fform" method="POST"  action="upload" enctype="multipart/form-data">
+        <input id="myfile" name="file" type="file" />
+        <input type="submit" value="保存" onclick="add()"  class="btn btn-block btn-outline-primary" style="width: 150px;margin-top: 10px"/>
+    </form>
+    <input type="hidden" id="titleid" value="{{.titleid}}">
+</div>
 
 </body>
 <script>
-   function add() {
-    var titleid = $("#titleid").val()
-       var filename = $("#myfile")[0].value.split("\\")[$("#myfile")[0].value.split("\\").length-1]
+    function add() {
+        var titleid = $("#titleid").val()
+        //alert(titleid)
+        var filename = $("#myfile")[0].value.split("\\")[$("#myfile")[0].value.split("\\").length-1]
         $.ajax({
             type:"post",
             url:"/addfilename",
@@ -43,4 +44,3 @@
         })
     }
 </script>
-</html>
