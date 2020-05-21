@@ -215,3 +215,44 @@ func (c *KnowController) ChangeKnowledgeStatus() {
 	models.ChangeKnowledgeStatusAction(id, status)
 	c.TplName = "knowledge.tpl"
 }
+
+//跳转上传页面
+func (c *KnowController) Jumpopload() {
+	titleid, _ := c.GetInt("id")
+	c.Data["titleid"] = titleid
+	c.TplName = "maincontroller/upload.tpl"
+}
+
+//文件上传
+func (c *KnowController) UploadFile() {
+
+	file, head, err := c.GetFile("file")
+	if err != nil {
+		c.Ctx.WriteString("获取文件失败")
+		return
+	}
+	defer file.Close()
+	fmt.Println(file)
+	filename := head.Filename
+	err = c.SaveToFile("file", "SDPATH/"+filename)
+	if err != nil {
+		c.Ctx.WriteString("上传失败1")
+	} else {
+		c.Ctx.WriteString("上传成功")
+	}
+
+}
+func (c *KnowController) Addfilename() {
+	//filename := c.UploadFile("fiflename")
+	filename := c.GetString("filename")
+	titleid, _ := c.GetInt("titleid")
+	fmt.Println("filename=", filename)
+	err := models.SaveFileName(filename, titleid)
+	//logs.Info("dataList",err)
+	if err != nil {
+		c.ServeJSON()
+	} else {
+		c.ServeJSON()
+	}
+
+}

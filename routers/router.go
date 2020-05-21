@@ -112,4 +112,10 @@ func init() {
 	//管理员修改知识点审批状态
 	beego.Router("/changeKnowledgeStatus", &controllers.KnowController{}, "*:ChangeKnowledgeStatus")
 
+	//上传文件页面
+	beego.Router("/Jumpupload", &controllers.KnowController{}, "*:Jumpopload")
+	//上传文件
+	beego.Router("/upload", &controllers.KnowController{}, "*:UploadFile")
+	//上传文件名到数据库
+	beego.Router("/addfilename", &controllers.KnowController{}, "*:Addfilename")
 }

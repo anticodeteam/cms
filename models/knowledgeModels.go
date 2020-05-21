@@ -184,14 +184,9 @@ func JumpToKnowledgePage() (dataList []interface{}, err error) {
 
 func EditKnowledge(title string, pid int) error {
 	o := orm.NewOrm()
-	knowledge := Cms_Knowledge{}
-	knowledge.Id = pid
-	o.Read(&knowledge)
-	knowledge.Title = title
-	num, err := o.Update(&knowledge)
-	//res, err := o.Raw("UPDATE knowledge SET title = ? WHERE id = ?", title, pid).Exec()
+	res, err := o.Raw("UPDATE knowledge SET title = ? WHERE id = ?", title, pid).Exec()
 	if err == nil {
-		//num, _ := res.RowsAffected()
+		num, _ := res.RowsAffected()
 		fmt.Println("mysql row affected nums: ", num)
 	}
 	return err
@@ -307,4 +302,17 @@ func ChangeKnowledgeStatusAction(Id int, Status int) {
 		Knowledge.Status = Status
 		o.Update(&Knowledge)
 	}
+}
+
+//保存上传的文件名存入到数据库
+func SaveFileName(filename string, id int) error {
+	o := orm.NewOrm()
+	fmt.Println("SaveFileName_filename=", filename)
+	fmt.Println("SaveFileName_id=", id)
+	res, err := o.Raw("UPDATE cms__knowledge SET filename = ? WHERE id = ?", filename, id).Exec()
+	if err == nil {
+		num, _ := res.RowsAffected()
+		fmt.Println("mysql row update nums:", num)
+	}
+	return err
 }

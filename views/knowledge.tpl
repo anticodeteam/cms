@@ -56,6 +56,7 @@
             </div>
         </div>
         <button type="button" class="btn btn-block btn-outline-primary" style="width: 10%" onclick="add()">添加知识文章</button>
+        <button type="button" class="btn btn-block btn-outline-primary" style="width: 10%" onclick="upload()">文件上传</button>
         <p></p>
         <ul  id="article">
             {{range .List}}
@@ -103,6 +104,10 @@
 
     function jump(id) {
         window.location.href="/articlePage?id="+ id;
+    }
+    function upload() {
+        var id = $("#fid").val()
+        window.location.href="/Jumpupload?id="+ id;
     }
 </script>
 
