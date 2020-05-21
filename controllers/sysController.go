@@ -102,3 +102,12 @@ func (c *SysController) DeleteTree() {
 	}
 }
 
+//测试模板语言
+func (this *SysController) ModelInit() {
+	this.Layout = "layout/AjaxFresh.tpl.tpl"
+	this.TplName = "maincontroller/login.tpl"
+	this.LayoutSections = make(map[string]string)
+	this.LayoutSections["HtmlHead"] = ""
+	this.LayoutSections["Scripts"] = ""
+	this.LayoutSections["Sidebar"] = ""
+}
