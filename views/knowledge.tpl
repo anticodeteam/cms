@@ -54,8 +54,8 @@
                 <!-- /.card -->
             </div>
         </div>
-        <button type="button" class="btn btn-block btn-outline-primary" style="width: 10%" onclick="add()">添加知识文章</button>
-        <button type="button" class="btn btn-block btn-outline-primary" style="width: 10%" onclick="upload()">文件上传</button>
+        <button type="button" class="btn btn-block btn-outline-primary" style="width: 15%" onclick="add()">添加知识文章</button>
+        <button type="button" class="btn btn-block btn-outline-primary" style="width: 15%" onclick="upload()">文件上传/下载</button>
         <p></p>
         <ul  id="article">
             {{range .List}}

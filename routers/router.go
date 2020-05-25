@@ -118,5 +118,9 @@ func init() {
 	beego.Router("/upload", &controllers.KnowController{}, "*:UploadFile")
 	//上传文件名到数据库
 	beego.Router("/addfilename", &controllers.KnowController{}, "*:Addfilename")
+	//获取文件名
+	beego.Router("/Getfilename", &controllers.KnowController{}, "*:Getfilename")
+	//下载文件
+	beego.Router("/Download", &controllers.KnowController{}, "*:Download")
 
 }

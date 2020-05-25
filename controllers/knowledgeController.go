@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
+	"io/ioutil"
 	"strconv"
 )
 
@@ -248,4 +249,33 @@ func (c *KnowController) Addfilename() {
 		c.ServeJSON()
 	}
 
+}
+
+//获取文件名
+func (c *KnowController) Getfilename() {
+	// 读取当前目录中的所有文件和子目录
+	files, err := ioutil.ReadDir(`D:\gopath\src\cms\SDPATH`)
+	if err != nil {
+		panic(err)
+	}
+	var filename []string
+	// 获取文件，并输出它们的名字
+	for _, file := range files {
+		//fmt.Println(file.Name())
+		name := file.Name()
+		filename = append(filename, name)
+		fmt.Println(filename)
+	}
+	c.Data["json"] = filename
+	c.ServeJSON()
+}
+
+//下载文件
+func (c *KnowController) Download() {
+	filename := c.GetString("filename")
+	fmt.Println("filename=", filename)
+	src := "./SDPATH/" + filename
+	fmt.Println("src=", src)
+	c.Ctx.Output.Download(src)
+	//c.Ctx.Output.Download("SDPATH/HKZ-go.xlsx")
 }
