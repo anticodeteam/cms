@@ -56,6 +56,7 @@
         </div>
         <button type="button" class="btn btn-block btn-outline-primary" style="width: 15%" onclick="add()">添加知识文章</button>
         <button type="button" class="btn btn-block btn-outline-primary" style="width: 15%" onclick="upload()">文件上传/下载</button>
+        <button type="button" class="btn btn-block btn-outline-primary" style="width: 15%" onclick="comment()">评论</button>
         <p></p>
         <ul  id="article">
             {{range .List}}
@@ -108,6 +109,10 @@
         var id = $("#fid").val()
         //alert(id)
         window.location.href="/Jumpupload?id="+id;
+    }
+    function comment() {
+        var id = $("#fid").val()
+        window.location.href="/jumpcomments?id="+id;
     }
 </script>
 

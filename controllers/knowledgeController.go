@@ -279,3 +279,53 @@ func (c *KnowController) Download() {
 	c.Ctx.Output.Download(src)
 	//c.Ctx.Output.Download("SDPATH/HKZ-go.xlsx")
 }
+
+//评论
+func (c *KnowController) JumpComments() {
+	id, _ := c.GetInt("id")
+	c.TplName = "maincontroller/comments.tpl"
+	fmt.Println("knowledgeid=", id)
+	c.Data["konwledgeId"] = id
+}
+
+//获取评论
+func (c *KnowController) GetComments() {
+	//knowledgeid, _ := c.GetInt("id")
+	//读取表中现有的评论
+	//var dataList interface{}
+	//dataList,err := models.Getcomments()
+	//if err != nil{
+	//	beego.Error(err)
+	//}
+	//id := c.JumpComments()
+	id, _ := c.GetInt("id")
+	//fmt.Println("koneledgeID+",id)
+	datalist, err := models.GetCommentList(id)
+	fmt.Println("datalist=", datalist)
+	//c.TplName="maincontroller/comments.tpl"
+	if err == nil {
+		c.Data["json"] = datalist
+	}
+	c.ServeJSON()
+	//c.TplName="maincontroller/comments.tpl"
+}
+
+//保存评论
+func (c *KnowController) Savecomments() {
+	id, _ := c.GetInt("id")
+	name := c.GetString("name")
+	comment := c.GetString("comment")
+	fmt.Println(id, name, comment)
+	models.SaveComments(id, name, comment)
+	c.Data["konwledgeId"] = id
+	c.TplName = "maincontroller/comments.tpl"
+}
+
+//删除评论
+func (c *KnowController) DeleteComment() {
+	name := c.GetString("name")
+	fmt.Println("name====", name)
+	models.DeleteComment(name)
+	c.TplName = "maincontroller/comments.tpl"
+
+}

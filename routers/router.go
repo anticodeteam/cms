@@ -122,5 +122,12 @@ func init() {
 	beego.Router("/Getfilename", &controllers.KnowController{}, "*:Getfilename")
 	//下载文件
 	beego.Router("/Download", &controllers.KnowController{}, "*:Download")
-
+	//跳转评论页
+	beego.Router("/jumpcomments", &controllers.KnowController{}, "*:JumpComments")
+	//获取评论
+	beego.Router("/getcomments", &controllers.KnowController{}, "*:GetComments")
+	//保存评论
+	beego.Router("/addcomments", &controllers.KnowController{}, "*:Savecomments")
+	//删除评论
+	beego.Router("/DeleteComment", &controllers.KnowController{}, "*:DeleteComment")
 }

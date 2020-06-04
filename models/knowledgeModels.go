@@ -2,6 +2,8 @@ package models
 
 import (
 	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
 	"strconv"
@@ -37,6 +39,12 @@ type Cms_Article struct {
 	Detail      string
 	Creater     string
 	Time        string
+}
+type Cms_Comments struct {
+	Id          int
+	Knowledgeid int
+	Name        string
+	Comments    string
 }
 
 func GetInformationByKonwledge() (dataList []interface{}, err error) {
@@ -308,4 +316,51 @@ func SaveFileName(filename string, id int) error {
 		fmt.Println("mysql row update nums:", num)
 	}
 	return err
+}
+
+//获取表中评论
+func GetCommentList(id int) (dataList []interface{}, err error) {
+	fmt.Println("id=====", id)
+	var list []Cms_Comments
+	o := orm.NewOrm()
+	qs := o.QueryTable(new(Cms_Comments))
+	//fmt.Println("list=",qs.Filter("knowledgeid",id))
+	//res, err := o.Raw("SELECT * FROM cms_comments WHERE knowledgeid = ?", id).Exec()
+	//fmt.Println("res=",res)
+	if _, err = qs.Filter("knowledgeid", id).All(&list); err == nil {
+		fmt.Println("list", list)
+		for _, v := range list {
+			dataList = append(dataList, v)
+		}
+		return dataList, nil
+		fmt.Println(dataList)
+	}
+	return nil, err
+}
+
+//保存评论
+func SaveComments(id interface{}, name string, comment string) {
+	o := orm.NewOrm()
+	comments := &Cms_Comments{}
+	comments.Knowledgeid = id.(int)
+	comments.Name = name
+	comments.Comments = comment
+	id, err := o.Insert(comments)
+	if err == nil {
+		fmt.Println(id)
+	}
+
+}
+
+//删除评论
+func DeleteComment(name string) {
+	o := orm.NewOrm()
+	fmt.Println("Name=", name)
+	num, err := o.Delete(&Cms_Comments{Name: name})
+	if err != nil {
+		beego.Info("删除失败", err)
+		logs.Info("删除失败", err)
+		return
+	}
+	beego.Info("删除成功，一共删除了：", num, "条")
 }
