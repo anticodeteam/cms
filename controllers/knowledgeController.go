@@ -284,9 +284,8 @@ func (c *KnowController) Download() {
 //评论
 func (c *KnowController) JumpComments() {
 	id, _ := c.GetInt("id")
-	c.TplName = "maincontroller/comments.tpl"
-	fmt.Println("knowledgeid=", id)
 	c.Data["konwledgeId"] = id
+	c.TplName = "maincontroller/comments.tpl"
 }
 
 //获取评论

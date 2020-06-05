@@ -20,9 +20,13 @@ $(function () {
             for (var i = 0; i < len; i++)   {
                 if (data[i].Pid == 0 && data[i].Gid == 0){
                     tablestr += "<tr onclick='showdirectory(\"" + data[i].Id + "\")' style='background-color: #f5eac1'>";
-                    tablestr += "<td>" + data[i].Title + "</td>";
-                    tablestr += "<td>" + data[i].Creater + "</td>";
+                    //名称
+                    tablestr += "<td>" + data[i].Title      + "</td>";
+                    //创建者
+                    tablestr += "<td>" + data[i].Creater    + "</td>";
+                    //更新时间
                     tablestr += "<td>" + data[i].UpdateTime + "</td>";
+                    //文件状态
                     if(data[i].Creater == curruser){
                         if(data[i].Status == 0){
                             tablestr += "<td><a href='#' onclick='changeKnowledgeStatus("+data[i].Id+",1)'>申请上架</a></td>";
@@ -34,20 +38,32 @@ $(function () {
                     }else{
                         tablestr += "<td></td>";
                     }
+                    //关注
                     if(data[i].Isguanzhu == 0){
                         tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'onclick='addGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>关注</a>" + "</td>";
                     }else{
                         tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'onclick='deleteGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>取消关注</a>" + "</td>";
                     }
-                    tablestr += "<td><img src='/static/img/del.jpg' onclick='deleteKnow("+data[i].Id+")' width='20px' height='20px'></td>"
+                    //删除
+                    if(data[i].Creater == curruser){
+                        tablestr += "<td><img src='/static/img/del.jpg' onclick='deleteKnow("+data[i].Id+")' width='20px' height='20px'></td>"
+                    }else {
+                        tablestr += "<td></td>"
+                    }
+                    //添加二级目录
                     tablestr += "<td><button class='btn btn-default' onclick='openLevel2AddPage("+ data[i].Id +")'>添加二级目录</button></td>"
                     tablestr += "</tr>"
+                    //遍历data，找到子节点并生成tr
                     for(var j = 0; j < len; j++){
                         if (data[i].Id == data[j].Pid){
                             tablestr += "<tr onclick='jump("+ data[j].Id +")' class='tr"+ data[i].Id +"' style='background-color: #f4f6f9'>";
+                            //名称
                             tablestr += "<td>" + data[j].Title      + "</td>";
+                            //创建者
                             tablestr += "<td>" + data[j].Creater    + "</td>";
+                            //更新时间
                             tablestr += "<td>" + data[j].UpdateTime + "</td>";
+                            //文件状态
                             if(data[j].Creater == curruser){
                                 if(data[j].Status == 0){
                                     tablestr += "<td><a href='#' onclick='changeKnowledgeStatus("+data[j].Id+",1)'>申请上架</a></td>";
@@ -59,12 +75,18 @@ $(function () {
                             }else{
                                 tablestr += "<td></td>";
                             }
+                            //关注
                             if(data[j].Isguanzhu == 0){
                                 tablestr += "<td>" + "<a href='#' id='moji" + data[j].Id + "\'onclick='addGuanzhuInfo("+ data[j].Id + "," + data[j].Pid +")'>关注</a>" + "</td>";
                             }else{
                                 tablestr += "<td>" + "<a href='#' id='moji" + data[j].Id + "\'onclick='deleteGuanzhuInfo("+ data[j].Id + "," + data[j].Pid +")'>取消关注</a>" + "</td>";
                             }
-                            tablestr += "<td><img src='/static/img/color_delete.jpg' onclick='deleteKnow("+data[j].Id+")' width='20px' height='20px'></td>"
+                            //删除
+                            if(data[i].Creater == curruser){
+                                tablestr += "<td><img src='/static/img/color_delete.jpg' onclick='deleteKnow("+data[j].Id+")' width='20px' height='20px'></td>"
+                            }else {
+                                tablestr += "<td></td>"
+                            }
                             tablestr += "<td></td>"
                             tablestr += "</tr>";
                         }

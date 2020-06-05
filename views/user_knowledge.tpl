@@ -44,7 +44,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <button class="btn btn-default" id="addButton">添加新的知识库选项</button>
+                        <button class="btn btn-default" id="addButton">添加一级选项</button>
                         <h3 class="card-title">{{.BigTitle}}</h3>
                         <div style="display: inline-block"><label>一级目录标识</label><div class="Level_1"></div></div>
                         <div style="display: inline-block"><label>二级目录标识</label><div class="Level_2"></div></div>
