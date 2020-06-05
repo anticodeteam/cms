@@ -1,0 +1,19 @@
+#knowTable > thead > tr > th,td {
+    width: 16%;
+}
+
+.Level_1 {
+    width: 100px;
+    height: 40px;
+    background-color: #f5eac1;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.Level_2 {
+    width: 100px;
+    height: 40px;
+    background-color: #f4f6f9;
+    vertical-align: middle;
+    display: inline-block;
+}

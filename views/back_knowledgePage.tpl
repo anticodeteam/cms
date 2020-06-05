@@ -526,11 +526,12 @@
                                         "<span> </span>"
 
                         if(data[i].Status == 1){
-                            tablestr += "<a href='#' onclick='changeKnowledgeStatus(" + data[i].Id + ",1)'>上架</a>"
+                            tablestr += "<a href='#' onclick='changeKnowledgeStatus(" + data[i].Id + ",3)'>上架</a>"
                         }else if(data[i].Status == 2){
                             tablestr += "<a href='#' onclick='changeKnowledgeStatus(" + data[i].Id + ",0)'>下架</a>"
                         }
-                        tablestr +=  up + "</td>" + "</tr>";
+                        //tablestr +=  up + "</td>" + "</tr>";
+                        tablestr +=  "</td></tr>";
                     }
                     $("#bodys").html(tablestr)
 

@@ -60,12 +60,15 @@ func (c *SysController) GetPage() {
 
 func (c *SysController) Admin() {
 	id, _ := c.GetInt("Id") //获取前台传的值
+	Uid := c.GetSession("UserID")
+	fmt.Println("UserID=", Uid)
 	switch id {
 	case 1:
 		datalist, _ := models.GetInformationByKonwledge()
 		title1 := models.SearchTemplate(id)
 		c.Data["BigTitle"] = title1
 		c.Data["List"] = datalist
+		c.Data["uid"] = Uid.(int)
 		c.TplName = "user_knowledge.tpl"
 	case 2:
 		c.TplName = "user_guanzhu.tpl"
@@ -101,4 +104,3 @@ func (c *SysController) DeleteTree() {
 		c.ServeJSON()
 	}
 }
-

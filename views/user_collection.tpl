@@ -89,18 +89,20 @@
             type:"post",
             url:"/getcollection",
             success:function(data){
-                var tablestr = "";
-                var len = data.length;
-                console.log(data);
-                console.log("长度："+len);
-                for (var i = 0; i < len; i++)   {
-                    tablestr += "<tr>";
-                    tablestr += "<td onclick='jump()'>" + data[i].Title + "</td>";
-                    tablestr += "<td onclick='jump()'>" + data[i].UpdateTime + "</td>";
-                    tablestr += "<td>" + "<a href='#' onclick='deleteCollection("+ data[i].Id +")'>取消收藏</a>" + "</td>";
-                    tablestr += "</tr>";
+                if(data){
+                    var tablestr = "";
+                    var len = data.length;
+                    console.log(data);
+                    console.log("长度："+len);
+                    for (var i = 0; i < len; i++)   {
+                        tablestr += "<tr>";
+                        tablestr += "<td onclick='jump()'>" + data[i].Title + "</td>";
+                        tablestr += "<td onclick='jump()'>" + data[i].UpdateTime + "</td>";
+                        tablestr += "<td>" + "<a href='#' onclick='deleteCollection("+ data[i].Id +")'>取消收藏</a>" + "</td>";
+                        tablestr += "</tr>";
+                    }
+                    $("#bodys").html(tablestr)
                 }
-                $("#bodys").html(tablestr)
             }
         });
     }

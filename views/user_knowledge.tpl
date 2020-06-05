@@ -12,12 +12,17 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="/static/css/adminlte.min.css">
     <!-- Google Font: Source Sans Pro -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" >
+    <!--zidingyi css-->
+    <link rel="stylesheet" href="/static/css/user_knowledge.css" >
+    <!---->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-
+    <input type="hidden" class="currUser" value={{.uid}}>
+    <input type="hidden" class="knowId">
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -41,6 +46,8 @@
                     <div class="card-header">
                         <button class="btn btn-default" id="addButton">添加新的知识库选项</button>
                         <h3 class="card-title">{{.BigTitle}}</h3>
+                        <div style="display: inline-block"><label>一级目录标识</label><div class="Level_1"></div></div>
+                        <div style="display: inline-block"><label>二级目录标识</label><div class="Level_2"></div></div>
                         <div class="card-tools">
                             <div class="input-group input-group-sm" style="width: 150px;">
                                 <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
@@ -60,6 +67,8 @@
                                 <th>创建者</th>
                                 <th>更新时间</th>
                                 <th>文件状态</th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -81,7 +90,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title">添加</h3>
+                        <h3 class="modal-title">添加一级目录</h3>
                         <button type="button" class="close" data-dismiss="modal">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -98,6 +107,32 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                         <button type="button" class="btn btn-primary" onclick="userSaveKnowledge()">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalTable2">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">添加二级目录</h3>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-body-content">
+                            <div class="form-group must">
+                                <label class="col-sm-3 control-label">名称</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="knowlevel2" name="knowledge"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" onclick="addLevel2Menu()">保存</button>
                     </div>
                 </div>
             </div>
@@ -120,165 +155,6 @@
 <script src="/static/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="/static/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="/static/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $("#addButton").click(function() {
-            $('#modalTable').modal({
-                show:true,
-                backdrop:'static'
-            });
-        })
-    });
-
-    window.onload = function () {
-        $.ajax({
-            type:"post",
-            url:"/getknowledge",
-            success:function(data){
-                var tablestr = "";
-                var len = data.length;
-                console.log(data);
-                //先拼出一个一级目录，然后查询它是否存在子目录，如存在就插入在它后面，如不存在，则继续拼下一个一级目录依次循环
-                for (var i = 0; i < len; i++)   {
-                    if (data[i].Pid == 0 && data[i].Gid == 0){
-                        tablestr += "<tr onclick='showdirectory(\"" + data[i].Id + "\")'>";
-                        tablestr += "<td>" + data[i].Title + "</td>";
-                        tablestr += "<td>" + data[i].Creater + "</td>";
-                        tablestr += "<td>" + data[i].UpdateTime + "</td>";
-                        if(data[i].Status == 0){
-                            tablestr += "<td><a href='#' onclick='changeKnowledgeStatus("+data[i].id+",1)'>申请上架</a></td>";
-                        }else if(data[i].Status == 1){
-                            tablestr += "<td><a href='#' onclick='changeKnowledgeStatus("+data[i].id+",0)'>取消申请</a></td>";
-                        }else{
-                            tablestr += "<td><a href='#' onclick='changeKnowledgeStatus("+data[i].id+",2)'>申请下架</a></td>";
-                        }
-                        if(data[i].Isguanzhu == 0){
-                            tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='addGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>关注</a>" + "</td>";
-                        }else{
-                            tablestr += "<td>" + "<a href='#' id='moji" + data[i].Id + "\'    onclick='deleteGuanzhuInfo("+ data[i].Id + "," + data[i].Pid +")'>取消关注</a>" + "</td>";
-                        }
-                        tablestr += "</tr><tr><td colspan='5'><table style='width: 100%' id='div"+ data[i].Id +"'>";
-                        for(var j = 0; j < len; j++){
-                            if (data[i].Id == data[j].Pid){
-                                tablestr += "<tr>";
-                                tablestr += "<td onclick='jump("+ data[j].Id +")'>" + data[j].Title + "</td>";
-                                tablestr += "<td onclick='jump("+ data[j].Id +")'>" + data[j].Creater + "</td>";
-                                tablestr += "<td onclick='jump("+ data[j].Id +")'>" + data[j].UpdateTime + "</td>";
-                                tablestr += "<td></td><td></td>"
-                                //tablestr += "<td>" + "<a href='#' id='moji" + data[j].Id + "\'    onclick='addGuanzhuInfo("+ data[j].Id + "," + data[j].Pid +")'>关注</a>" + "</td>";
-                                tablestr += "</tr>";
-                            }
-                        }
-                        tablestr += "</table></td></tr>"
-                    }
-                }
-                $("#bodys").html(tablestr);
-            }
-        });
-        // $('#knowTable').DataTable({
-        //     "paging": true,
-        //     "lengthChange": false,
-        //     "searching": false,
-        //     "ordering": false,
-        //     "info": true,
-        //     "autoWidth": true,
-        //     "responsive": true,
-        // });
-    }
-</script>
-
-
-<script type="text/javascript">
-    function showdirectory(id){
-        if($("#div"+id).is(":hidden")){
-            $("#div"+id).show();
-
-        }else if(!$("#div"+id).is(":hidden")){
-            $("#div"+id).hide();
-        }
-    }
-
-    function jump(gid) {
-        // $.ajax({
-        //     type:"post",
-        //     url:"/jump",
-        //     data:{id:gid},
-        //     success:function () {
-        //         window.location.href="/jump"
-        //     }
-        // });
-       // $.post("/jump", {id:gid} );
-        window.location.href="/jump?id="+ gid
-
-    }
-
-    function  addGuanzhuInfo(id,pid) {
-        $.ajax({
-            type:"post",
-            url:"/addGuanzhu",
-            data: {Id:id,Pid:pid},
-            dataType : "json",
-            success:function(data){
-                if (data.flag == true){
-                    console.log("id:"+id);
-                    // $("#moji"+id).text('取消关注');
-                    window.location.reload();
-                }
-            }
-        });
-    }
-    function deleteGuanzhuInfo(id){
-        if(confirm("确定要取消关注吗？"))
-        {
-            $.ajax({
-                type:"post",
-                url:"/deleteGuanzhu",
-                data: {Id:id},
-                success:function(){
-                    alert("取消成功！");
-                    // $("#moji"+id).text('关注');
-                    window.location.reload();
-                }
-            });
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-
-    function userSaveKnowledge() {
-        var konwledgeName = $("#knowledge").val();
-        if(konwledgeName){
-            $.ajax({
-                type:"post",
-                url:"/userSaveKnowledge",
-                data: {Name:konwledgeName},
-                success:function (result) {
-                    console.log("result:"+result)
-                    alert("添加成功！");
-                    window.location.reload();
-                }
-            })
-        }
-    }
-
-    function changeKnowledgeStatus(id,status) {
-        $.ajax({
-            type:"post",
-            url:"/changeThisStatus",
-            data:{Id:id,status:status},
-            success:function (result) {
-                alert("申请已提交，请耐心等待管理员处理！")
-                window.location.reload()
-            },
-            error:function () {
-                alert("申请提交失败")
-            }
-        })
-    }
-</script>
+<script src="/static/js/user_knowledge.js"></script>
 </body>
 </html>

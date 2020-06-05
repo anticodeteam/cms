@@ -130,4 +130,10 @@ func init() {
 	beego.Router("/addcomments", &controllers.KnowController{}, "*:Savecomments")
 	//删除评论
 	beego.Router("/DeleteComment", &controllers.KnowController{}, "*:DeleteComment")
+	//
+	beego.Router("/changeThisStatus", &controllers.KnowController{}, "*:ChangeThisStatus")
+	//
+	beego.Router("/addLevel2Menu", &controllers.KnowController{}, "*:AddLevel2Menu")
+	//
+	beego.Router("/deleteKnow", &controllers.KnowController{}, "*:DeleteKnow")
 }

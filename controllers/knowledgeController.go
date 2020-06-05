@@ -154,7 +154,8 @@ func (c *KnowController) AddArticle() {
 	texts := c.GetString("text")
 	title := c.GetString("title")
 	id, _ := c.GetInt("id")
-	err := models.InsertArticle(texts, title, id)
+	Uid := c.GetSession("UserID")
+	err := models.InsertArticle(texts, title, id, Uid)
 	logs.Info("dataList :", err)
 	if err != nil {
 		c.ServeJSON()
@@ -327,5 +328,28 @@ func (c *KnowController) DeleteComment() {
 	fmt.Println("name====", name)
 	models.DeleteComment(name)
 	c.TplName = "maincontroller/comments.tpl"
+}
 
+//改变知识状态
+func (c *KnowController) ChangeThisStatus() {
+	Id, _ := c.GetInt("Id")
+	status, _ := c.GetInt("status")
+	models.ChangeThisStatusAction(Id, status)
+	c.ServeJSON()
+}
+
+//
+func (c *KnowController) AddLevel2Menu() {
+	ID, _ := c.GetInt("ID")
+	Title := c.GetString("Title")
+	Uid := c.GetSession("UserID")
+	models.AddLevel2MenuAction(ID, Title, Uid)
+	c.ServeJSON()
+}
+
+//
+func (c *KnowController) DeleteKnow() {
+	ID, _ := c.GetInt("ID")
+	models.DeleteKnowAction(ID)
+	c.ServeJSON()
 }

@@ -133,16 +133,23 @@ func GetMoreDirectorys(title string) (dataList []interface{}, err error) {
 
 //测试自建结构体插入
 func Knowledges(userid interface{}) (dataList []interface{}, err error) {
+	var user = Cms_User{}
 	var list []Cms_Knowledge
 	var data = new(Cms_Knowledge2)
-	Uid := userid.(int)
+	Uid := userid.(int) //处理输入参数userid的数据类型
+	user.Uid = Uid      //将处理后的userid赋值给user对象
 	o := orm.NewOrm()
+	err_auth := o.Read(&user) //根据userid去判断当前用户的权限
 	qs := o.QueryTable(new(Cms_Knowledge))
-
 	cond := orm.NewCondition()
-	cond1 := cond.And("creater__in", "admin", Uid).Or("status", 1)
-	//if _, err = qs.Filter("pid__exact", 0).All(&list); err == nil {            只查询一级目录
-	//if _, err = qs.Filter("creater__in", "admin",Uid).All(&list); err == nil { //查询全部
+	cond1 := cond
+	if err_auth == nil {
+		if user.Auth == "1" { //普通用户
+			cond1 = cond.And("creater__in", "admin", Uid).Or("status__exact", 3)
+		} else if user.Auth == "2" { //管理员
+			cond1 = cond.And("creater__exact", "admin").Or("status__in", 1, 2)
+		}
+	}
 	if _, err = qs.SetCond(cond1).All(&list); err == nil { //查询全部
 		for _, v := range list {
 			if userid == nil {
@@ -150,10 +157,8 @@ func Knowledges(userid interface{}) (dataList []interface{}, err error) {
 			} else {
 				data = &Cms_Knowledge2{v.Id, v.Title, v.Pid, v.Gid, IsGuanzhu(userid.(int), v.Id), v.UpdateTime, v.Creater, v.Status} //自定义输入内容，前台根据isguanzhu来判定是否显示取消关注，还差一个查询关注表的内容
 			}
-
 			dataList = append(dataList, *data)
 		}
-		fmt.Println("datalist_Knowledge:", dataList)
 		return dataList, nil
 	}
 	return nil, err
@@ -216,7 +221,7 @@ func DeleteKnowledge(pid int) error {
 	return err
 }
 
-func InsertArticle(text, title string, id int) error {
+func InsertArticle(text, title string, id int, Uid interface{}) error {
 	t := time.Now() //设置当前时间
 	o := orm.NewOrm()
 	category := &Cms_Article{}
@@ -230,8 +235,8 @@ func InsertArticle(text, title string, id int) error {
 	category.KnowledgeId = int(dataId)
 	category.Title = title
 	category.Detail = text
-	category.Time = t.String() //将时间转换成string类型进行保存
-	category.Creater = "admin"
+	category.Time = t.Format("2006-01-02 15:04:05") //将时间转换成string类型进行保存
+	category.Creater = strconv.Itoa(Uid.(int))
 	_, err := o.Insert(category)
 	if err != nil {
 		return err
@@ -363,4 +368,58 @@ func DeleteComment(name string) {
 		return
 	}
 	beego.Info("删除成功，一共删除了：", num, "条")
+}
+
+//
+func ChangeThisStatusAction(Id int, status int) {
+	o := orm.NewOrm()
+	know := Cms_Knowledge{Id: Id}
+	if o.Read(&know) == nil {
+		know.Status = status
+		if num, err := o.Update(&know); err == nil {
+			fmt.Println(num)
+		}
+	}
+
+}
+
+//
+func AddLevel2MenuAction(Id int, title string, Uid interface{}) {
+	o := orm.NewOrm()
+	t := time.Now()
+	var know Cms_Knowledge
+	know.Pid = Id
+	know.Title = title
+	know.Status = 0
+	know.Creater = strconv.Itoa(Uid.(int))
+	know.Gid = 0
+	know.UpdateTime = t.Format("2006-01-02 15:04:05")
+
+	id, err := o.Insert(&know)
+	if err == nil {
+		fmt.Println(id)
+	}
+}
+
+//
+func DeleteKnowAction(id int) {
+	var list []Cms_Knowledge
+	var knowids []int
+	o := orm.NewOrm()
+	qs := o.QueryTable(new(Cms_Knowledge))
+	qs.Filter("pid", id).All(&list)
+	fmt.Println("DeleteKnowAction->list:", list)
+	if len(list) > 1 {
+		for _, v := range list {
+			knowids = append(knowids, v.Id)
+		}
+		for _, val := range knowids {
+			o.Delete(&Cms_Knowledge{Id: val})
+		}
+		o.Delete(&Cms_Knowledge{Id: id})
+	} else {
+		if num, err := o.Delete(&Cms_Knowledge{Id: id}); err == nil {
+			fmt.Println(num)
+		}
+	}
 }
