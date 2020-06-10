@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/static/css/adminlte.min.css">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href="/static/css/index.css" rel="stylesheet">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -158,10 +159,8 @@
         <!-- /.sidebar -->
     </aside>
 
-
-
-
-    <div>
+    <div style="min-height: 800px">
+        <div class="weather gg"></div>
         <iframe src="/admin/01"  frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=800"  style="display: none"></iframe>
     </div>
 
@@ -190,21 +189,8 @@
 <script src="/static/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/static/js/demo.js"></script>
-
-<script>
-    //  $(function () {
-    //         $('#example2').DataTable({
-    //             "paging": true,
-    //             "lengthChange": true,
-    //             "searching": false,
-    //             "ordering": false,
-    //             "info": true,
-    //             "autoWidth": true,
-    //             "responsive": true,
-    //         });
-    // });
-</script>
-
+<!--自定义js-->
+<script src="/static/js/index.js"></script>
 
 <script type="text/javascript">
     window.onload = function(){

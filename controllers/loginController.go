@@ -14,7 +14,10 @@ type MainController struct {
 func (c *MainController) Get() {
 	//c.Data["Website"] = "beego.me"
 	//c.Data["Email"] = "astaxie@gmail.com"
+	str := c.Ctx.Request.RemoteAddr
+	fmt.Println(str)
 	c.TplName = "maincontroller/login.tpl"
+
 }
 
 func (c *MainController) Home() {

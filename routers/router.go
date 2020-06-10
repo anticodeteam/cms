@@ -136,4 +136,6 @@ func init() {
 	beego.Router("/addLevel2Menu", &controllers.KnowController{}, "*:AddLevel2Menu")
 	//
 	beego.Router("/deleteKnow", &controllers.KnowController{}, "*:DeleteKnow")
+	//
+
 }

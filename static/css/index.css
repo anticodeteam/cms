@@ -1,0 +1,11 @@
+.weather {
+    width: 100px;
+    height: 100px;
+    float: right;
+}
+
+.gg {
+    position: fixed;
+    top: 80px;
+    right: 200px;
+}
