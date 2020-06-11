@@ -16,6 +16,23 @@ func (c *MainController) Get() {
 	//c.Data["Email"] = "astaxie@gmail.com"
 	str := c.Ctx.Request.RemoteAddr
 	fmt.Println(str)
+	var user = models.Cms_User{}
+	user.Uid, _ = c.Ctx.Input.Session("UserID").(int)
+
+	o := orm.NewOrm()
+	err2 := o.Read(&user)
+	if err2 == nil {
+		fmt.Println("2次登陆 %v ", user)
+		if user.Auth == "2" { //Auth为2时，代表登录者为管理员
+			c.TplName = "index.tpl"
+		} else { //Auth为1时，代表登录者为普通用户
+			//c.ctx.Redirect(302, "/loginAction")
+			c.TplName = "page_left.tpl"
+
+		}
+		return
+	}
+
 	c.TplName = "maincontroller/login.tpl"
 
 }
