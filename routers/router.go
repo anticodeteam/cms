@@ -138,4 +138,7 @@ func init() {
 	beego.Router("/deleteKnow", &controllers.KnowController{}, "*:DeleteKnow")
 	//
 
+	//logout
+	beego.Router("/logout", &controllers.SysController{}, "*:Logout")
+
 }

@@ -104,3 +104,11 @@ func (c *SysController) DeleteTree() {
 		c.ServeJSON()
 	}
 }
+
+//logout
+func (c *SysController) Logout() {
+
+	c.DelSession("UserID")
+
+	c.Redirect("/", 302)
+}

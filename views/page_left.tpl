@@ -44,6 +44,13 @@
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
+            <!-- logout  -->
+            <li class="nav-item dropdown">
+                <a class="nav-link"  href="/logout">
+                    <span >Logout</span>
+                </a>
+
+            </li>
             <!-- Messages Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-link" data-toggle="dropdown" href="#">
